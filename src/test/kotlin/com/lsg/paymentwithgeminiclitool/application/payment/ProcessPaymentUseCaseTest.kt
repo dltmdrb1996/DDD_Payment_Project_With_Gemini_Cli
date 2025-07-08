@@ -57,7 +57,7 @@ class ProcessPaymentUseCaseTest {
             amount = Amount(10000), // totalAmount
             subPayments = listOf(
                 ProcessPaymentUseCase.SubPayment("MyPoint", Amount(1000)),
-                ProcessPaymentUseCase.SubPayment("CardEasy", Amount(9000), "1234-5678")
+                ProcessPaymentUseCase.SubPayment("CardEasy", Amount(9000), "1234-5678-1234-5678")
             )
         )
 

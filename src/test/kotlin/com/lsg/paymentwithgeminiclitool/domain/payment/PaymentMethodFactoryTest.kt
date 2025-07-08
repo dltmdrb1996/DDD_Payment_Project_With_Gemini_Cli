@@ -7,13 +7,13 @@ import org.junit.jupiter.api.assertThrows
 
 class PaymentMethodFactoryTest {
 
-    private val factory = PaymentMethodFactoryImpl()
+    private val factory: PaymentMethodFactory = PaymentMethodFactoryImpl()
 
     @Test
     fun `MyMoney 타입으로 단일 결제 객체 생성 성공`() {
         // given
         val request = PaymentMethodFactory.Request(
-            paymentMethodType = "MyMoney",
+            paymentMethodType = PaymentMethodType.MY_MONEY,
             amount = Amount(10000)
         )
 
@@ -25,13 +25,45 @@ class PaymentMethodFactoryTest {
     }
 
     @Test
+    fun `CardEasy 타입으로 단일 결제 객체 생성 성공`() {
+        // given
+        val request = PaymentMethodFactory.Request(
+            paymentMethodType = PaymentMethodType.CARD_EASY,
+            amount = Amount(10000),
+            cardInfo = CardInfo("1234-5678-1234-5678")
+        )
+
+        // when
+        val paymentMethod = factory.create(request)
+
+        // then
+        assertInstanceOf(CardEasyPayment::class.java, paymentMethod)
+    }
+
+    @Test
+    fun `BankEasy 타입으로 단일 결제 객체 생성 성공`() {
+        // given
+        val request = PaymentMethodFactory.Request(
+            paymentMethodType = PaymentMethodType.BANK_EASY,
+            amount = Amount(10000),
+            bankInfo = BankInfo("신한은행 110-123-456789")
+        )
+
+        // when
+        val paymentMethod = factory.create(request)
+
+        // then
+        assertInstanceOf(BankEasyPayment::class.java, paymentMethod)
+    }
+
+    @Test
     fun `MyPointComposite 타입으로 복합 결제 객체 생성 성공`() {
         // given
         val request = PaymentMethodFactory.Request(
-            paymentMethodType = "MyPointComposite",
+            paymentMethodType = PaymentMethodType.MY_POINT_COMPOSITE,
             subPayments = listOf(
-                PaymentMethodFactory.SubPayment("MyPoint", Amount(1000)),
-                PaymentMethodFactory.SubPayment("CardEasy", Amount(9000), "1234-5678")
+                PaymentMethodFactory.SubPayment(type = "MyPoint", amount = Amount(1000)),
+                PaymentMethodFactory.SubPayment(type = "CardEasy", amount = Amount(9000), cardInfo = CardInfo("1234-5678-1234-5678"))
             )
         )
 
@@ -42,17 +74,5 @@ class PaymentMethodFactoryTest {
         assertInstanceOf(MyPointCompositePayment::class.java, paymentMethod)
     }
 
-    @Test
-    fun `지원하지 않는 결제 타입으로 생성시 예외 발생`() {
-        // given
-        val request = PaymentMethodFactory.Request(
-            paymentMethodType = "UnsupportedType",
-            amount = Amount(10000)
-        )
-
-        // when & then
-        assertThrows<IllegalArgumentException> {
-            factory.create(request)
-        }
-    }
+    
 }
