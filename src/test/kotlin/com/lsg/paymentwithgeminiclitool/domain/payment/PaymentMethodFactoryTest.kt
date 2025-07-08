@@ -62,8 +62,8 @@ class PaymentMethodFactoryTest {
         val request = PaymentMethodFactory.Request(
             paymentMethodType = PaymentMethodType.MY_POINT_COMPOSITE,
             subPayments = listOf(
-                PaymentMethodFactory.SubPayment(type = "MyPoint", amount = Amount(1000)),
-                PaymentMethodFactory.SubPayment(type = "CardEasy", amount = Amount(9000), cardInfo = CardInfo("1234-5678-1234-5678"))
+                PaymentMethodFactory.SubPayment(type = SubPaymentType.MY_POINT, amount = Amount(1000)),
+                PaymentMethodFactory.SubPayment(type = SubPaymentType.CARD_EASY, amount = Amount(9000), cardInfo = CardInfo("1234-5678-1234-5678"))
             )
         )
 
