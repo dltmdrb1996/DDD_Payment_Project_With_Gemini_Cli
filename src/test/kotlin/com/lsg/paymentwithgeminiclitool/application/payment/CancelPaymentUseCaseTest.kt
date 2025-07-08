@@ -15,7 +15,7 @@ class CancelPaymentUseCaseTest : BehaviorSpec({
         val payment = paymentRepository.save(
             Payment(
                 orderId = OrderId(1L),
-                paymentMethod = CardEasyPayment(Amount(1000), "1234-5678"),
+                paymentMethod = CardEasyPayment(Amount(1000), CardInfo("1234-1234-1234-1234")),
                 totalAmount = Amount(1000),
                 status = PaymentStatus.COMPLETED
             )
@@ -37,7 +37,7 @@ class CancelPaymentUseCaseTest : BehaviorSpec({
         val payment = paymentRepository.save(
             Payment(
                 orderId = OrderId(2L),
-                paymentMethod = CardEasyPayment(Amount(2000), "5678-1234"),
+                paymentMethod = CardEasyPayment(Amount(2000), CardInfo("5678-5678-5678-5678")),
                 totalAmount = Amount(2000),
                 status = PaymentStatus.CANCELED
             )

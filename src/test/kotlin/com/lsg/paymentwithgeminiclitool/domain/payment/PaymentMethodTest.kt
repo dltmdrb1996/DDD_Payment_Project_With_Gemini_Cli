@@ -27,7 +27,7 @@ class PaymentMethodTest {
     fun `단일결제_카드간편결제_생성_성공`() {
         // when & then
         assertDoesNotThrow {
-            CardEasyPayment(amount = Amount(10000), cardInfo = "1234-5678")
+            CardEasyPayment(amount = Amount(10000), cardInfo = CardInfo("1234-5678-1234-5678"))
         }
     }
 
@@ -35,7 +35,7 @@ class PaymentMethodTest {
     fun `단일결제_계좌간편결제_생성_성공`() {
         // when & then
         assertDoesNotThrow {
-            BankEasyPayment(amount = Amount(10000), bankInfo = "110-123-456789")
+            BankEasyPayment(amount = Amount(10000), bankInfo = BankInfo("신한은행 110-123-456789"))
         }
     }
 
@@ -60,7 +60,7 @@ class PaymentMethodTest {
     fun `복합결제_My포인트와_카드_생성_성공`() {
         // given
         val pointPayment = MyPointPayment(amount = Amount(1000))
-        val cardPayment = CardEasyPayment(amount = Amount(9000), cardInfo = "1234-5678")
+        val cardPayment = CardEasyPayment(amount = Amount(9000), cardInfo = CardInfo("1234-5678-1234-5678"))
 
         // when
         val compositePayment = MyPointCompositePayment(
@@ -77,7 +77,7 @@ class PaymentMethodTest {
     fun `복합결제_My머니와_계좌_생성_성공`() {
         // given
         val moneyPayment = MyMoneyPayment(amount = Amount(1000))
-        val bankPayment = BankEasyPayment(amount = Amount(9000), bankInfo = "110-123-456789")
+        val bankPayment = BankEasyPayment(amount = Amount(9000), bankInfo = BankInfo("신한은행 110-123-456789"))
 
         // when
         val compositePayment = MyMoneyCompositePayment(
@@ -95,7 +95,7 @@ class PaymentMethodTest {
         // given
         val pointPayment = MyPointPayment(amount = Amount(1000))
         val moneyPayment = MyMoneyPayment(amount = Amount(2000))
-        val cardPayment = CardEasyPayment(amount = Amount(7000), cardInfo = "1234-5678")
+        val cardPayment = CardEasyPayment(amount = Amount(7000), cardInfo = CardInfo("1234-5678-1234-5678"))
 
         // when
         val compositePayment = MyPointAndMoneyCompositePayment(

@@ -27,12 +27,12 @@ data class MyMoneyPayment(
 
 data class CardEasyPayment(
     override val amount: Amount,
-    val cardInfo: String
+    val cardInfo: CardInfo
 ) : SinglePayment, MyPointOtherPayment, MyMoneyOtherPayment, MyPointAndMoneyOtherPayment
 
 data class BankEasyPayment(
     override val amount: Amount,
-    val bankInfo: String
+    val bankInfo: BankInfo
 ) : SinglePayment, MyPointOtherPayment, MyMoneyOtherPayment, MyPointAndMoneyOtherPayment
 
 
