@@ -54,10 +54,10 @@ class ProcessPaymentUseCase(
     ) {
         fun toFactoryRequest(): PaymentMethodFactory.Request {
             return PaymentMethodFactory.Request(
-                paymentMethodType = this.paymentMethodType,
+                paymentMethodType = PaymentMethodType.from(this.paymentMethodType),
                 amount = this.amount,
-                cardInfo = this.cardInfo,
-                bankInfo = this.bankInfo,
+                cardInfo = this.cardInfo?.let { CardInfo(it) },
+                bankInfo = this.bankInfo?.let { BankInfo(it) },
                 subPayments = this.subPayments.map { it.toFactorySubPayment() }
             )
         }
@@ -73,8 +73,8 @@ class ProcessPaymentUseCase(
             return PaymentMethodFactory.SubPayment(
                 type = this.type,
                 amount = this.amount,
-                cardInfo = this.cardInfo,
-                bankInfo = this.bankInfo
+                cardInfo = this.cardInfo?.let { CardInfo(it) },
+                bankInfo = this.bankInfo?.let { BankInfo(it) }
             )
         }
     }
