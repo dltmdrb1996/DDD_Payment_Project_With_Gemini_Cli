@@ -103,7 +103,8 @@
 
 3.  **안전한 도메인 모델링 기법**
     - **대수적 데이터 타입 (ADT) 활용**:
-        - **Sum Type**: **Kotlin의 `sealed interface`를 사용하여 'A 이거나 B' 같은 배타적 선택 관계를 모델링**하고, `when` 표현식으로 모든 경우를 컴파일 시점에 체크하도록 강제합니다.
+        - **Sum Type**: **모든 범위가 지정되어있고 종류가 분별가능한 타입은 String이나 int가 아닌 합타입으로 작성합니다.
+        - **Sum Type**: **Kotlin의 `sealed interface`나 sealed class`를 사용하여 'A 이거나 B' 같은 배타적 선택 관계를 모델링**하고, `when` 표현식으로 모든 경우를 컴파일 시점에 체크하도록 강제합니다.
         - **Product Type**: **Kotlin의 `data class`를 사용하여 'A 그리고 B' 같은 속성의 조합을 모델링합니다.**
     - **값 객체(Value Object)와 원시 타입 집착 방지**:
         - **`Long`, `String`, `Int`와 같은 원시 타입 대신, `value class`를 사용하여 비즈니스 의미를 갖는 타입을 명시적으로 생성**하고, 생성 시점에 유효성을 검증(`init` 블록 활용)합니다.
