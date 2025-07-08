@@ -1,2 +1,7 @@
-# Gemini settings
-.gemini/
+
+
+# IDE and build files
+.gradle/
+.idea/
+build/
+HELP.md
