@@ -15,7 +15,7 @@ class GetPaymentDetailsUseCaseTest : BehaviorSpec({
     Given("결제 내역이 존재하는 경우") {
         val paymentId = PaymentId(1L)
         val orderId = OrderId(100L)
-        val paymentMethod = CardEasyPayment(amount = Amount(1000), cardInfo = "1234-5678-9012-3456")
+        val paymentMethod = CardEasyPayment(amount = Amount(1000), cardInfo = CardInfo("1234-5678-1234-5678"))
         val totalAmount = Amount(1000)
         val createdAt = LocalDateTime.now()
 

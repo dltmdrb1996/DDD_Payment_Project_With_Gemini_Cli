@@ -15,7 +15,7 @@ class RefundPaymentUseCaseTest : BehaviorSpec({
         val payment = paymentRepository.save(
             Payment(
                 orderId = OrderId(1L),
-                paymentMethod = CardEasyPayment(Amount(10000), "1234-5678"),
+                paymentMethod = CardEasyPayment(Amount(10000), CardInfo("1234-1234-1234-1234")),
                 totalAmount = Amount(10000)
             )
         )
@@ -37,7 +37,7 @@ class RefundPaymentUseCaseTest : BehaviorSpec({
             val partialPayment = paymentRepository.save(
                 Payment(
                     orderId = OrderId(2L),
-                    paymentMethod = CardEasyPayment(Amount(10000), "5678-1234"),
+                    paymentMethod = CardEasyPayment(Amount(10000), CardInfo("5678-5678-5678-5678")),
                     totalAmount = Amount(10000)
                 )
             )
@@ -67,7 +67,7 @@ class RefundPaymentUseCaseTest : BehaviorSpec({
         val canceledPayment = paymentRepository.save(
             Payment(
                 orderId = OrderId(3L),
-                paymentMethod = CardEasyPayment(Amount(10000), "9012-3456"),
+                paymentMethod = CardEasyPayment(Amount(10000), CardInfo("9012-9012-9012-9012")),
                 totalAmount = Amount(10000),
                 status = PaymentStatus.CANCELED
             )

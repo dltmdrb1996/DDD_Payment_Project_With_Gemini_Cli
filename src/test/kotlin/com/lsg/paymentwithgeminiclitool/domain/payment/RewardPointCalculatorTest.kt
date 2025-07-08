@@ -23,7 +23,7 @@ class RewardPointCalculatorTest {
     @Test
     fun `카드_단일결제시_결제금액의_0_5퍼센트_적립`() {
         // given
-        val paymentMethod = CardEasyPayment(amount = Amount(10000), cardInfo = "1234-5678")
+        val paymentMethod = CardEasyPayment(amount = Amount(10000), cardInfo = CardInfo("1234-1234-1234-1234"))
 
         // when
         val rewardPoints = calculator.calculate(paymentMethod)
@@ -52,7 +52,7 @@ class RewardPointCalculatorTest {
         // given
         val paymentMethod = MyPointCompositePayment(
             myPointPayment = MyPointPayment(amount = Amount(1000)),
-            otherPayment = CardEasyPayment(amount = Amount(9000), cardInfo = "1234-5678")
+            otherPayment = CardEasyPayment(amount = Amount(9000), cardInfo = CardInfo("1234-1234-1234-1234"))
         )
 
         // when
@@ -68,7 +68,7 @@ class RewardPointCalculatorTest {
         val paymentMethod = MyPointAndMoneyCompositePayment(
             myPointPayment = MyPointPayment(amount = Amount(1000)),
             myMoneyPayment = MyMoneyPayment(amount = Amount(2000)),
-            otherPayment = CardEasyPayment(amount = Amount(7000), cardInfo = "1234-5678")
+            otherPayment = CardEasyPayment(amount = Amount(7000), cardInfo = CardInfo("1234-1234-1234-1234"))
         )
 
         // when
