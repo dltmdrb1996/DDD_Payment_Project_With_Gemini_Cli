@@ -18,6 +18,7 @@ data class Payment(
     val orderId: OrderId,
     val paymentMethod: PaymentMethod,
     val totalAmount: Amount,
+    val status: PaymentStatus = PaymentStatus.COMPLETED,
     val createdAt: LocalDateTime = LocalDateTime.now(),
     val version: Long = 0L
 ) {
