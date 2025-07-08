@@ -8,33 +8,35 @@ import com.lsg.paymentwithgeminiclitool.domain.common.Amount
  */
 sealed interface PaymentMethod
 
-// --- 단일 결제 --- 
+// --- 단일 결제 ---
 
 /**
  * 하나의 결제 수단으로만 결제하는 경우를 나타내는 sealed interface.
  */
-sealed interface SinglePayment : PaymentMethod
+sealed interface SinglePayment : PaymentMethod {
+    val amount: Amount
+}
 
 data class MyPointPayment(
-    val amount: Amount
+    override val amount: Amount
 ) : SinglePayment, MyPointOtherPayment
 
 data class MyMoneyPayment(
-    val amount: Amount
+    override val amount: Amount
 ) : SinglePayment, MyPointOtherPayment
 
 data class CardEasyPayment(
-    val amount: Amount,
+    override val amount: Amount,
     val cardInfo: String
 ) : SinglePayment, MyPointOtherPayment, MyMoneyOtherPayment, MyPointAndMoneyOtherPayment
 
 data class BankEasyPayment(
-    val amount: Amount,
+    override val amount: Amount,
     val bankInfo: String
 ) : SinglePayment, MyPointOtherPayment, MyMoneyOtherPayment, MyPointAndMoneyOtherPayment
 
 
-// --- 복합 결제 --- 
+// --- 복합 결제 ---
 
 /**
  * My Point와 함께 사용할 수 있는 다른 결제 수단을 나타내는 sealed interface.

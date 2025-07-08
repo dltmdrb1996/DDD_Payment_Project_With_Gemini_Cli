@@ -1,7 +1,11 @@
 
 
 # IDE and build files
-.gradle/
-.idea/
+# .gitignore
+.gradle
 build/
+.idea/
+*.DS_Store
+.gemini/
+GEMINI.md
 HELP.md

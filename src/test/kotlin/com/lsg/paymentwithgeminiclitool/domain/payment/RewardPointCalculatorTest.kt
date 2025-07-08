@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 
 class RewardPointCalculatorTest {
 
-    private val calculator = RewardPointCalculator()
+    private val calculator = RewardPointCalculatorImpl()
 
     @Test
     fun `My머니_단일결제시_결제금액의_1퍼센트_적립`() {

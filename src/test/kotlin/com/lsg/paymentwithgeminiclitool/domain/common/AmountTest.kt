@@ -15,9 +15,9 @@ class AmountTest {
     }
 
     @Test
-    fun `금액이_0이면_IllegalArgumentException_발생`() {
+    fun `금액이_0이면_Amount_객체_생성_성공`() {
         // when & then
-        assertThrows<IllegalArgumentException> {
+        assertDoesNotThrow {
             Amount(0L)
         }
     }

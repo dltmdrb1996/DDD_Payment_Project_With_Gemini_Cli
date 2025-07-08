@@ -18,28 +18,58 @@ data class Payment(
     val orderId: OrderId,
     val paymentMethod: PaymentMethod,
     val totalAmount: Amount,
+    val refundedAmount: Amount = Amount(0),
     val status: PaymentStatus = PaymentStatus.COMPLETED,
     val createdAt: LocalDateTime = LocalDateTime.now(),
     val version: Long = 0L
 ) {
     init {
-        // 애그리게잇 내부의 총 금액이 결제수단별 금액의 합과 일치하는지 검증
-        require(totalAmount.value == paymentMethod.getTotalAmount().value) {
-            "결제 총액이 결제수단별 금액의 합과 일치하지 않습니다."
-        }
+        require(totalAmount.value >= 0) { "결제 총액은 0 이상이어야 합니다." }
+        require(refundedAmount.value >= 0) { "환불된 금액은 0 이상이어야 합니다." }
+        require(totalAmount.value >= refundedAmount.value) { "환불된 금액은 총 결제액을 초과할 수 없습니다." }
     }
 
     /**
      * 결제를 취소합니다.
      *
-     * @return 상태가 CANCELED로 변경된 새로운 Payment 객체
-     * @throws IllegalStateException 이미 취소된 결제일 경우
+     * @return 상태가 CANCELED로 변경된 새���운 Payment 객체
+     * @throws IllegalStateException 이미 취소되었거나 환불된 결제일 경우
      */
     fun cancel(): Payment {
-        if (this.status == PaymentStatus.CANCELED) {
-            throw IllegalStateException("이미 취소된 결제입니다.")
+        if (status == PaymentStatus.CANCELED || status == PaymentStatus.REFUNDED || status == PaymentStatus.PARTIALLY_REFUNDED) {
+            throw IllegalStateException("이미 취소되었거나 환불 처리된 결제는 취소할 수 없습니다.")
         }
         return this.copy(status = PaymentStatus.CANCELED)
+    }
+
+    /**
+     * 결제를 환불합니다.
+     *
+     * @param amountToRefund 환불할 금액
+     * @return 환불 처리된 새로운 Payment 객체
+     * @throws IllegalStateException 취소된 결제이거나, 환불 가능 금액을 초과했을 경우
+     */
+    fun refund(amountToRefund: Amount): Payment {
+        if (status == PaymentStatus.CANCELED) {
+            throw IllegalStateException("취소된 결제는 환불할 수 없습니다.")
+        }
+
+        val newRefundedAmount = Amount(this.refundedAmount.value + amountToRefund.value)
+
+        if (newRefundedAmount.value > this.totalAmount.value) {
+            throw IllegalStateException("환불 금액이 결제 금액을 초과할 수 없습니다.")
+        }
+
+        val newStatus = if (newRefundedAmount.value == this.totalAmount.value) {
+            PaymentStatus.REFUNDED
+        } else {
+            PaymentStatus.PARTIALLY_REFUNDED
+        }
+
+        return this.copy(
+            refundedAmount = newRefundedAmount,
+            status = newStatus
+        )
     }
 }
 
@@ -64,14 +94,3 @@ fun PaymentMethod.getTotalAmount(): Amount {
         }
     }
 }
-
-/**
- * SinglePayment 인터페이스에 amount 속성을 추가합니다.
- */
-val SinglePayment.amount: Amount
-    get() = when (this) {
-        is MyPointPayment -> this.amount
-        is MyMoneyPayment -> this.amount
-        is CardEasyPayment -> this.amount
-        is BankEasyPayment -> this.amount
-    }
