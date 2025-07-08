@@ -1,8 +1,8 @@
 package com.lsg.paymentwithgeminiclitool.interfaces.payment
 
-import com.lsg.paymentwithgeminiclitool.application.payment.ProcessPaymentUseCase
+import com.lsg.paymentwithgeminiclitool.application.payment.*
 import com.lsg.paymentwithgeminiclitool.domain.common.Amount
-import com.lsg.paymentwithgeminiclitool.domain.payment.OrderId
+import com.lsg.paymentwithgeminiclitool.domain.payment.*
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -31,29 +31,37 @@ data class PaymentRequestDto(
     val subPayments: List<SubPaymentDto> = emptyList()
 ) {
     fun toUseCaseRequest(): ProcessPaymentUseCase.Request {
-        return ProcessPaymentUseCase.Request(
-            orderId = OrderId(this.orderId),
-            paymentMethodType = this.paymentMethodType,
-            amount = this.amount?.let { Amount(it) },
-            cardInfo = this.cardInfo,
-            bankInfo = this.bankInfo,
-            subPayments = this.subPayments.map { it.toUseCaseSubPayment() }
-        )
+        val paymentType = PaymentMethodType.from(this.paymentMethodType)
+        return if (subPayments.isNotEmpty()) {
+            ProcessPaymentUseCase.Composite(
+                orderId = OrderId(this.orderId),
+                paymentMethodType = paymentType,
+                subPayments = this.subPayments.map { it.toUseCaseSubPayment() }
+            )
+        } else {
+            ProcessPaymentUseCase.Single(
+                orderId = OrderId(this.orderId),
+                paymentMethodType = paymentType,
+                amount = this.amount?.let { Amount(it) } ?: throw IllegalArgumentException("Amount is required for single payment"),
+                cardInfo = this.cardInfo,
+                bankInfo = this.bankInfo
+            )
+        }
     }
 }
 
 data class SubPaymentDto(
     val type: String,
-    val amount: Long? = null,
+    val amount: Long,
     val cardInfo: String? = null,
     val bankInfo: String? = null
 ) {
-    fun toUseCaseSubPayment(): ProcessPaymentUseCase.SubPayment {
-        return ProcessPaymentUseCase.SubPayment(
-            type = this.type,
-            amount = this.amount?.let { Amount(it) },
-            cardInfo = this.cardInfo,
-            bankInfo = this.bankInfo
+    fun toUseCaseSubPayment(): PaymentMethodFactory.SubPayment {
+        return PaymentMethodFactory.SubPayment(
+            type = SubPaymentType.from(this.type),
+            amount = Amount(this.amount),
+            cardInfo = this.cardInfo?.let { CardInfo(it) },
+            bankInfo = this.bankInfo?.let { BankInfo(it) }
         )
     }
 }
@@ -67,7 +75,7 @@ data class PaymentResponseDto(
         fun from(response: ProcessPaymentUseCase.Response): PaymentResponseDto {
             return PaymentResponseDto(
                 paymentId = response.paymentId?.value,
-                status = response.status,
+                status = response.status.toString(),
                 rewardPoints = response.rewardPoints
             )
         }

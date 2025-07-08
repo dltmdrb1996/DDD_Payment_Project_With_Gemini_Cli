@@ -1,6 +1,7 @@
 package com.lsg.paymentwithgeminiclitool.domain.payment
 
 enum class PaymentMethodType(val value: String) {
+    MY_POINT("MyPoint"),
     MY_MONEY("MyMoney"),
     CARD_EASY("CardEasy"),
     BANK_EASY("BankEasy"),

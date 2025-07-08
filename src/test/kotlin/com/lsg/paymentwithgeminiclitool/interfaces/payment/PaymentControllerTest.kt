@@ -3,6 +3,7 @@ package com.lsg.paymentwithgeminiclitool.interfaces.payment
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.lsg.paymentwithgeminiclitool.application.payment.ProcessPaymentUseCase
 import com.lsg.paymentwithgeminiclitool.domain.payment.PaymentId
+import com.lsg.paymentwithgeminiclitool.domain.payment.PaymentStatus
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
@@ -26,17 +27,17 @@ class PaymentControllerTest {
     private lateinit var processPaymentUseCase: ProcessPaymentUseCase
 
     @Test
-    fun `결제_요청_API_호출_성공`() {
+    fun `결��_요청_API_호출_성공`() {
         // given
         val requestDto = PaymentRequestDto(
             orderId = 1L,
-            paymentMethodType = "NPayMoney",
+            paymentMethodType = "MyMoney",
             amount = 10000
         )
 
         val useCaseResponse = ProcessPaymentUseCase.Response(
             paymentId = PaymentId(1L),
-            status = "SUCCESS",
+            status = PaymentStatus.COMPLETED,
             rewardPoints = 100L
         )
 
@@ -49,7 +50,7 @@ class PaymentControllerTest {
         }.andExpect {
             status { isOk() }
             jsonPath("$.paymentId") { value(1L) }
-            jsonPath("$.status") { value("SUCCESS") }
+            jsonPath("$.status") { value("COMPLETED") }
             jsonPath("$.rewardPoints") { value(100L) }
         }
     }
