@@ -28,6 +28,19 @@ data class Payment(
             "결제 총액이 결제수단별 금액의 합과 일치하지 않습니다."
         }
     }
+
+    /**
+     * 결제를 취소합니다.
+     *
+     * @return 상태가 CANCELED로 변경된 새로운 Payment 객체
+     * @throws IllegalStateException 이미 취소된 결제일 경우
+     */
+    fun cancel(): Payment {
+        if (this.status == PaymentStatus.CANCELED) {
+            throw IllegalStateException("이미 취소된 결제입니다.")
+        }
+        return this.copy(status = PaymentStatus.CANCELED)
+    }
 }
 
 /**
