@@ -14,7 +14,7 @@ interface PaymentMethodFactory {
     )
 
     data class SubPayment(
-        val type: String,
+        val type: SubPaymentType,
         val amount: Amount? = null,
         val cardInfo: CardInfo? = null,
         val bankInfo: BankInfo? = null
